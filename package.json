@@ -1,0 +1,48 @@
+{
+  "name": "google-spreadsheet-datasource",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "webpack --config webpack.config.prod.js",
+    "dev": "webpack --mode development",
+    "watch": "webpack --mode development --watch",
+    "test": "jest --config jest.config.js"
+  },
+  "author": "Mitsuhiro Tanda",
+  "license": "Apache",
+  "dependencies": {
+    "@types/gapi": "0.0.36",
+    "@types/gapi.auth2": "0.0.50",
+    "@types/gapi.client.sheets": "^4.0.1",
+    "lodash": "^4.17.4",
+    "moment": "^2.22.1",
+    "rxjs": "^6.2.1",
+    "rxjs-compat": "^6.2.1",
+    "scriptjs": "^2.5.9"
+  },
+  "devDependencies": {
+    "@types/ace": "0.0.40",
+    "@types/grafana": "https://git@github.com/CorpGlory/types-grafana.git",
+    "@types/jest": "^22.2.3",
+    "@types/lodash": "^4.14.74",
+    "@types/react": "^16.2.0",
+    "@types/rx": "^4.1.1",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.0.1",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^4.5.1",
+    "css-loader": "^0.28.11",
+    "grafana-sdk-mocks": "github:grafana/grafana-sdk-mocks",
+    "jest": "^23.0.1",
+    "ng-annotate-webpack-plugin": "^0.3.0",
+    "style-loader": "^0.21.0",
+    "ts-jest": "^22.4.6",
+    "ts-loader": "^4.3.0",
+    "typescript": "^2.8.3",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  }
+}

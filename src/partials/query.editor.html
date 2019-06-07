@@ -1,0 +1,26 @@
+<query-editor-row query-ctrl="ctrl" class="google-spreadsheet-datasource-query-row">
+  <div class="gf-form-inline">
+    <div class="gf-form gf-form--grow">
+      <label class="gf-form-label width-8">Spreadsheet ID</label>
+      <input type="text" class="gf-form-input" ng-model="ctrl.target.spreadsheetId" spellcheck='false' data-min-length=0
+        data-items=1000 ng-model-onblur ng-change="ctrl.onChangeInternal()">
+      </input>
+    </div>
+  </div>
+  <div class="gf-form-inline">
+    <div class="gf-form">
+      <label class="gf-form-label width-8">Range</label>
+      <input type="text" class="gf-form-input" ng-model="ctrl.target.range" spellcheck='false' data-min-length=0
+        data-items=20 ng-model-onblur ng-change="ctrl.onChangeInternal()">
+      </input>
+    </div>
+
+    <div class="gf-form max-width-30">
+      <label class="gf-form-label width-7">Alias format</label>
+      <input type="text" class="gf-form-input" ng-model="ctrl.target.aliasFormat" spellcheck='false'
+        placeholder="alias format" data-min-length=0 data-items=1000 ng-model-onblur
+        ng-change="ctrl.onChangeInternal()">
+      </input>
+    </div>
+  </div>
+</query-editor-row>

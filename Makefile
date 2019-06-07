@@ -1,0 +1,4 @@
+all: grunt
+
+grunt:
+	grunt
