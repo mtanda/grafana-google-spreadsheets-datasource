@@ -1,0 +1,35 @@
+{
+  "name": "GoogleSpreadsheet",
+  "id": "mtanda-google-spreadsheet-datasource",
+  "type": "datasource",
+  "partials": {
+    "config": "public/app/plugins/datasource/mtanda-google-spreadsheet-datasource/partials/config.html"
+  },
+  "metrics": true,
+  "annotations": true,
+  "hiddenQueries": true,
+  "backend": false,
+  "executable": "google-spreadsheet-plugin",
+  "info": {
+    "description": "google spreadsheet datasource",
+    "author": {
+      "name": "Mitsuhiro Tanda"
+    },
+    "links": [
+      {
+        "name": "GitHub",
+        "url": "https://github.com/mtanda/grafana-google-spreadsheet-datasource"
+      },
+      {
+        "name": "MIT License",
+        "url": "https://github.com/mtanda/grafana-google-spreadsheet-datasource/blob/master/LICENSE"
+      }
+    ],
+    "version": "1.0.0",
+    "updated": "2019-06-07"
+  },
+  "dependencies": {
+    "grafanaVersion": "3.x.x",
+    "plugins": []
+  }
+}
