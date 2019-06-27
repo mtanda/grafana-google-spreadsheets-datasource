@@ -10,7 +10,8 @@ export class GoogleSpreadsheetDatasource {
   id: string;
   access: string;
   clientId: string;
-  scopes: string;
+  apiKey: string;
+  scopes: any;
   discoveryDocs: any;
   q: any;
   templateSrv: any;
@@ -24,7 +25,15 @@ export class GoogleSpreadsheetDatasource {
     this.id = instanceSettings.id;
     this.access = instanceSettings.jsonData.access || 'direct';
     this.clientId = instanceSettings.jsonData.clientId;
-    this.scopes = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+    this.apiKey = instanceSettings.jsonData.apiKey;
+    //this.scopes = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+    this.scopes = [
+      'https://www.googleapis.com/auth/drive.file',
+      'https://www.googleapis.com/auth/drive',
+      'https://www.googleapis.com/auth/drive.readonly',
+      'https://www.googleapis.com/auth/spreadsheets.readonly',
+      'https://www.googleapis.com/auth/spreadsheets'
+    ];
     this.discoveryDocs = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
     this.q = $q;
     this.templateSrv = templateSrv;
@@ -37,7 +46,10 @@ export class GoogleSpreadsheetDatasource {
     let deferred = this.q.defer();
     scriptjs('https://apis.google.com/js/api.js', () => {
       gapi.load('client:auth2', () => {
-        return deferred.resolve();
+        gapi.client.load('sheets', 'v4', () => {
+          console.log('sheets loaded');
+          return deferred.resolve();
+        });
       });
     });
     return deferred.promise;
@@ -61,8 +73,13 @@ export class GoogleSpreadsheetDatasource {
     }
 
     return this.load().then(() => {
+      console.log(JSON.stringify(this.clientId));
+      console.log(JSON.stringify(this.apiKey));
+      console.log(JSON.stringify(this.scopes));
+      console.log(JSON.stringify(this.discoveryDocs));
       return gapi.client.init({
         clientId: this.clientId,
+        apiKey: this.apiKey,
         scope: this.scopes,
         discoveryDocs: this.discoveryDocs
       }).then(() => {
@@ -94,10 +111,10 @@ export class GoogleSpreadsheetDatasource {
           .map((t) => {
             let params = {
               spreadsheetId: t.spreadsheetId,
-              range: t.range,
+              //range: t.range,
+              range: 'Sheet1!A1:A3'
             };
-            return this.getValues(params).then(values => {
-            });
+            return this.getValues(params);
           })
       ).then((values) => {
       });
@@ -117,15 +134,18 @@ export class GoogleSpreadsheetDatasource {
   }
 
   getValues(params) {
-    return (() => {
-      return gapi.client.sheets.spreadsheets.values.get({
-        spreadsheetId: params.spreadsheetId,
-        range: params.range,
-      }).then((response) => {
-        return response.result;
-      }, (err) => {
-        throw err;
-      });
+    console.log('here2');
+    console.log(JSON.stringify(params));
+    //return gapi.client['sheets'].spreadsheets.get({
+    return gapi.client['sheets'].spreadsheets.values.get({
+      spreadsheetId: params.spreadsheetId,
+      range: params.range,
+    }).then((response) => {
+      console.log(response);
+      console.log(JSON.stringify(response));
+      return response.result;
+    }, (err) => {
+      throw err;
     });
   }
 }
