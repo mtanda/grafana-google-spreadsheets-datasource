@@ -79,7 +79,6 @@ export class GoogleSpreadsheetDatasource {
       console.log(JSON.stringify(this.discoveryDocs));
       return gapi.client.init({
         clientId: this.clientId,
-        apiKey: this.apiKey,
         scope: this.scopes,
         discoveryDocs: this.discoveryDocs
       }).then(() => {
