@@ -26,14 +26,14 @@ export class GoogleSpreadsheetDatasource {
     this.access = instanceSettings.jsonData.access || 'direct';
     this.clientId = instanceSettings.jsonData.clientId;
     this.apiKey = instanceSettings.jsonData.apiKey;
-    //this.scopes = 'https://www.googleapis.com/auth/spreadsheets.readonly';
-    this.scopes = [
-      'https://www.googleapis.com/auth/drive.file',
-      'https://www.googleapis.com/auth/drive',
-      'https://www.googleapis.com/auth/drive.readonly',
-      'https://www.googleapis.com/auth/spreadsheets.readonly',
-      'https://www.googleapis.com/auth/spreadsheets'
-    ];
+    this.scopes = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+    //this.scopes = [
+    //  'https://www.googleapis.com/auth/drive.file',
+    //  'https://www.googleapis.com/auth/drive',
+    //  'https://www.googleapis.com/auth/drive.readonly',
+    //  'https://www.googleapis.com/auth/spreadsheets.readonly',
+    //  'https://www.googleapis.com/auth/spreadsheets'
+    //];
     this.discoveryDocs = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
     this.q = $q;
     this.templateSrv = templateSrv;
