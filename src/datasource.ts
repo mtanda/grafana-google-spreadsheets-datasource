@@ -2,7 +2,7 @@ import _ from 'lodash';
 //import TableModel from 'grafana/app/core/table_model';
 import scriptjs from 'scriptjs';
 
-export class GoogleSpreadsheetDatasource {
+export class GoogleSpreadsheetsDatasource {
   type: string;
   name: string;
   id: string;

@@ -1,14 +1,14 @@
-import { GoogleSpreadsheetDatasource } from './datasource';
-import { GoogleSpreadsheetQueryCtrl } from './query_ctrl';
-import { GoogleSpreadsheetAnnotationsQueryCtrl } from './annotations_query_ctrl';
+import { GoogleSpreadsheetsDatasource } from './datasource';
+import { GoogleSpreadsheetsQueryCtrl } from './query_ctrl';
+import { GoogleSpreadsheetsAnnotationsQueryCtrl } from './annotations_query_ctrl';
 
-class GoogleSpreadsheetConfigCtrl {
+class GoogleSpreadsheetsConfigCtrl {
   static templateUrl = 'partials/config.html';
 }
 
 export {
-  GoogleSpreadsheetDatasource as Datasource,
-  GoogleSpreadsheetConfigCtrl as ConfigCtrl,
-  GoogleSpreadsheetQueryCtrl as QueryCtrl,
-  GoogleSpreadsheetAnnotationsQueryCtrl as AnnotationsQueryCtrl
+  GoogleSpreadsheetsDatasource as Datasource,
+  GoogleSpreadsheetsConfigCtrl as ConfigCtrl,
+  GoogleSpreadsheetsQueryCtrl as QueryCtrl,
+  GoogleSpreadsheetsAnnotationsQueryCtrl as AnnotationsQueryCtrl
 };

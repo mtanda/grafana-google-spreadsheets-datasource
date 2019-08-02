@@ -1,6 +1,6 @@
 import { QueryCtrl } from 'grafana/app/plugins/sdk';
 
-export class GoogleSpreadsheetQueryCtrl extends QueryCtrl {
+export class GoogleSpreadsheetsQueryCtrl extends QueryCtrl {
   scope: any;
   panelCtrl: any;
   static templateUrl = 'partials/query.editor.html';

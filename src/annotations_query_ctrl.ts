@@ -1,4 +1,4 @@
-export class GoogleSpreadsheetAnnotationsQueryCtrl {
+export class GoogleSpreadsheetsAnnotationsQueryCtrl {
   scope: any;
   static templateUrl = 'partials/annotations.editor.html';
 
