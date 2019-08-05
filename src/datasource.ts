@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import moment from 'moment';
 //import TableModel from 'grafana/app/core/table_model';
 import scriptjs from 'scriptjs';
 
@@ -116,6 +117,7 @@ export class GoogleSpreadsheetsDatasource {
     const spreadsheetId = annotation.spreadsheetId || '';
     const range = annotation.range || '';
     const timeKeys = (annotation.timeKeys || '0,1').split(',');
+    const timeFormat = (annotation.timeFormat || '');
     const titleFormat = annotation.titleFormat || '{{2}}';
     const textFormat = annotation.textFormat || '{{3}}';
     const tagKeys = (annotation.tagKeys || '2,3').split(',');
@@ -131,12 +133,14 @@ export class GoogleSpreadsheetsDatasource {
       const tags = value.filter((v, k) => {
         return tagKeys.includes(String(k));
       });
+      const timeFrom = timeFormat ? moment(value[timeKeys[0]], timeFormat).valueOf() : parseInt(value[timeKeys[0]], 10);
+      const timeTo = timeFormat ? moment(value[timeKeys[1]], timeFormat).valueOf() : parseInt(value[timeKeys[1]], 10);
 
       return [
         {
           regionId: spreadsheetId + i,
           annotation: annotation,
-          time: parseInt(value[timeKeys[0]], 10),
+          time: timeFrom,
           title: this.renderTemplate(titleFormat, value),
           text: this.renderTemplate(textFormat, value),
           tags: tags,
@@ -144,7 +148,7 @@ export class GoogleSpreadsheetsDatasource {
         {
           regionId: spreadsheetId + i,
           annotation: annotation,
-          time: parseInt(value[timeKeys[1]], 10),
+          time: timeTo,
           title: this.renderTemplate(titleFormat, value),
           text: this.renderTemplate(textFormat, value),
           tags: tags,
