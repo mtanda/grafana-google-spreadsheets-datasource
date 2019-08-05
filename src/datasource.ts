@@ -115,6 +115,7 @@ export class GoogleSpreadsheetsDatasource {
     const annotation = options.annotation;
     const spreadsheetId = annotation.spreadsheetId || '';
     const range = annotation.range || '';
+    const timeKeys = (annotation.timeKeys || '0,1').split(',');
     const titleFormat = annotation.titleFormat || '{{2}}';
     const textFormat = annotation.textFormat || '{{3}}';
     const tagKeys = (annotation.tagKeys || '2,3').split(',');
@@ -135,7 +136,7 @@ export class GoogleSpreadsheetsDatasource {
         {
           regionId: spreadsheetId + i,
           annotation: annotation,
-          time: parseInt(value[0], 10),
+          time: parseInt(value[timeKeys[0]], 10),
           title: this.renderTemplate(titleFormat, value),
           text: this.renderTemplate(textFormat, value),
           tags: tags,
@@ -143,7 +144,7 @@ export class GoogleSpreadsheetsDatasource {
         {
           regionId: spreadsheetId + i,
           annotation: annotation,
-          time: parseInt(value[1], 10),
+          time: parseInt(value[timeKeys[1]], 10),
           title: this.renderTemplate(titleFormat, value),
           text: this.renderTemplate(textFormat, value),
           tags: tags,
