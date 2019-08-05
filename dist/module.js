@@ -663,22 +663,28 @@ function () {
                 return tagKeys.includes(String(k));
               });
               var timeFrom = timeFormat ? (0, _moment2.default)(value[timeKeys[0]], timeFormat).valueOf() : parseInt(value[timeKeys[0]], 10);
-              var timeTo = timeFormat ? (0, _moment2.default)(value[timeKeys[1]], timeFormat).valueOf() : parseInt(value[timeKeys[1]], 10);
-              return [{
-                regionId: spreadsheetId + i,
+              var event = [{
                 annotation: annotation,
                 time: timeFrom,
                 title: _this.renderTemplate(titleFormat, value),
                 text: _this.renderTemplate(textFormat, value),
                 tags: tags
-              }, {
-                regionId: spreadsheetId + i,
-                annotation: annotation,
-                time: timeTo,
-                title: _this.renderTemplate(titleFormat, value),
-                text: _this.renderTemplate(textFormat, value),
-                tags: tags
               }];
+
+              if (timeKeys.length === 2) {
+                var timeTo = timeFormat ? (0, _moment2.default)(value[timeKeys[1]], timeFormat).valueOf() : parseInt(value[timeKeys[1]], 10);
+                event[0].regionId = spreadsheetId + i;
+                event.push({
+                  regionId: spreadsheetId + i,
+                  annotation: annotation,
+                  time: timeTo,
+                  title: _this.renderTemplate(titleFormat, value),
+                  text: _this.renderTemplate(textFormat, value),
+                  tags: tags
+                });
+              }
+
+              return event;
             }).flat();
             return [2
             /*return*/
