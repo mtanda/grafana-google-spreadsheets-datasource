@@ -612,7 +612,7 @@ function () {
 
   GoogleSpreadsheetsDatasource.prototype.annotationQuery = function (options) {
     return __awaiter(this, void 0, void 0, function () {
-      var annotation, spreadsheetId, range, titleFormat, textFormat, tagKeys, result, eventList;
+      var annotation, spreadsheetId, range, timeKeys, titleFormat, textFormat, tagKeys, result, eventList;
 
       var _this = this;
 
@@ -629,6 +629,7 @@ function () {
             annotation = options.annotation;
             spreadsheetId = annotation.spreadsheetId || '';
             range = annotation.range || '';
+            timeKeys = (annotation.timeKeys || '0,1').split(',');
             titleFormat = annotation.titleFormat || '{{2}}';
             textFormat = annotation.textFormat || '{{3}}';
             tagKeys = (annotation.tagKeys || '2,3').split(',');
@@ -659,14 +660,14 @@ function () {
               return [{
                 regionId: spreadsheetId + i,
                 annotation: annotation,
-                time: parseInt(value[0], 10),
+                time: parseInt(value[timeKeys[0]], 10),
                 title: _this.renderTemplate(titleFormat, value),
                 text: _this.renderTemplate(textFormat, value),
                 tags: tags
               }, {
                 regionId: spreadsheetId + i,
                 annotation: annotation,
-                time: parseInt(value[1], 10),
+                time: parseInt(value[timeKeys[1]], 10),
                 title: _this.renderTemplate(titleFormat, value),
                 text: _this.renderTemplate(textFormat, value),
                 tags: tags
