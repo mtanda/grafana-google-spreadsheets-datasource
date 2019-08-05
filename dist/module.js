@@ -1,4 +1,4 @@
-define(["app/plugins/sdk","lodash"], function(__WEBPACK_EXTERNAL_MODULE_grafana_app_plugins_sdk__, __WEBPACK_EXTERNAL_MODULE_lodash__) { return /******/ (function(modules) { // webpackBootstrap
+define(["app/plugins/sdk","lodash","moment"], function(__WEBPACK_EXTERNAL_MODULE_grafana_app_plugins_sdk__, __WEBPACK_EXTERNAL_MODULE_lodash__, __WEBPACK_EXTERNAL_MODULE_moment__) { return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -272,6 +272,10 @@ exports.GoogleSpreadsheetsDatasource = undefined;
 var _lodash = __webpack_require__(/*! lodash */ "lodash");
 
 var _lodash2 = _interopRequireDefault(_lodash);
+
+var _moment = __webpack_require__(/*! moment */ "moment");
+
+var _moment2 = _interopRequireDefault(_moment);
 
 var _scriptjs = __webpack_require__(/*! scriptjs */ "../node_modules/scriptjs/dist/script.js");
 
@@ -612,7 +616,7 @@ function () {
 
   GoogleSpreadsheetsDatasource.prototype.annotationQuery = function (options) {
     return __awaiter(this, void 0, void 0, function () {
-      var annotation, spreadsheetId, range, timeKeys, titleFormat, textFormat, tagKeys, result, eventList;
+      var annotation, spreadsheetId, range, timeKeys, timeFormat, titleFormat, textFormat, tagKeys, result, eventList;
 
       var _this = this;
 
@@ -630,6 +634,7 @@ function () {
             spreadsheetId = annotation.spreadsheetId || '';
             range = annotation.range || '';
             timeKeys = (annotation.timeKeys || '0,1').split(',');
+            timeFormat = annotation.timeFormat || '';
             titleFormat = annotation.titleFormat || '{{2}}';
             textFormat = annotation.textFormat || '{{3}}';
             tagKeys = (annotation.tagKeys || '2,3').split(',');
@@ -657,17 +662,19 @@ function () {
               var tags = value.filter(function (v, k) {
                 return tagKeys.includes(String(k));
               });
+              var timeFrom = timeFormat ? (0, _moment2.default)(value[timeKeys[0]], timeFormat).valueOf() : parseInt(value[timeKeys[0]], 10);
+              var timeTo = timeFormat ? (0, _moment2.default)(value[timeKeys[1]], timeFormat).valueOf() : parseInt(value[timeKeys[1]], 10);
               return [{
                 regionId: spreadsheetId + i,
                 annotation: annotation,
-                time: parseInt(value[timeKeys[0]], 10),
+                time: timeFrom,
                 title: _this.renderTemplate(titleFormat, value),
                 text: _this.renderTemplate(textFormat, value),
                 tags: tags
               }, {
                 regionId: spreadsheetId + i,
                 annotation: annotation,
-                time: parseInt(value[timeKeys[1]], 10),
+                time: timeTo,
                 title: _this.renderTemplate(titleFormat, value),
                 text: _this.renderTemplate(textFormat, value),
                 tags: tags
@@ -841,6 +848,17 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_grafana_app_plugins_sdk__;
 /***/ (function(module, exports) {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE_lodash__;
+
+/***/ }),
+
+/***/ "moment":
+/*!*************************!*\
+  !*** external "moment" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_moment__;
 
 /***/ })
 
