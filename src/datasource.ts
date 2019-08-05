@@ -134,26 +134,29 @@ export class GoogleSpreadsheetsDatasource {
         return tagKeys.includes(String(k));
       });
       const timeFrom = timeFormat ? moment(value[timeKeys[0]], timeFormat).valueOf() : parseInt(value[timeKeys[0]], 10);
-      const timeTo = timeFormat ? moment(value[timeKeys[1]], timeFormat).valueOf() : parseInt(value[timeKeys[1]], 10);
 
-      return [
+      let event: any = [
         {
-          regionId: spreadsheetId + i,
           annotation: annotation,
           time: timeFrom,
           title: this.renderTemplate(titleFormat, value),
           text: this.renderTemplate(textFormat, value),
           tags: tags,
         },
-        {
+      ];
+      if (timeKeys.length === 2) {
+        const timeTo = timeFormat ? moment(value[timeKeys[1]], timeFormat).valueOf() : parseInt(value[timeKeys[1]], 10);
+        event[0].regionId = spreadsheetId + i;
+        event.push({
           regionId: spreadsheetId + i,
           annotation: annotation,
           time: timeTo,
           title: this.renderTemplate(titleFormat, value),
           text: this.renderTemplate(textFormat, value),
           tags: tags,
-        }
-      ];
+        });
+      }
+      return event;
     }).flat();
 
     return eventList;
