@@ -33,4 +33,20 @@
       on-change="ctrl.onChangeInternal()">
     </gf-form-switch>
   </div>
+
+  <div class="gf-form-inline" ng-if="ctrl.target.resultFormat === 'table'">
+    <div class="gf-form">
+      <label class="gf-form-label width-8">Time Keys</label>
+      <input type="text" class="gf-form-input" ng-model="ctrl.target.timeKeys" spellcheck='false' data-min-length=0
+        data-items=20 ng-model-onblur ng-change="ctrl.onChangeInternal()">
+      </input>
+    </div>
+
+    <div class="gf-form">
+      <label class="gf-form-label width-8">Time Format</label>
+      <input type="text" class="gf-form-input" ng-model="ctrl.target.timeFormat" spellcheck='false' data-min-length=0
+        data-items=20 ng-model-onblur ng-change="ctrl.onChangeInternal()">
+      </input>
+    </div>
+  </div>
 </query-editor-row>

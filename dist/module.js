@@ -601,13 +601,33 @@ function () {
             data = results.map(function (result, i) {
               switch (options.targets[i].resultFormat) {
                 case 'table':
+                  var timeKeys_1 = (options.targets[i].timeKeys || '').split(',').map(function (k) {
+                    return parseInt(k, 10);
+                  });
+                  var timeFormat_1 = options.targets[i].timeFormat;
                   var table = new _table_model2.default();
                   table.columns = result.values[0].map(function (v, i) {
+                    if (timeKeys_1 && timeKeys_1.includes(i)) {
+                      return {
+                        text: "c" + i,
+                        type: 'time'
+                      };
+                    }
+
                     return {
                       text: "c" + i,
                       type: 'string'
                     };
                   });
+
+                  if (timeKeys_1) {
+                    result.values.forEach(function (v) {
+                      timeKeys_1.forEach(function (timeKey) {
+                        v[timeKey] = (0, _moment2.default)(v[timeKey], timeFormat_1).valueOf();
+                      });
+                    });
+                  }
+
                   table.rows = result.values;
                   return table;
 
