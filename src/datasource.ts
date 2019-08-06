@@ -98,7 +98,7 @@ export class GoogleSpreadsheetsDatasource {
         case 'table':
           let table = new TableModel();
           table.columns = result.values[0].map((v, i) => {
-            return { text: `r{i}`, type: 'string' };
+            return { text: `c${i}`, type: 'string' };
           });
           table.rows = result.values;
           return table;

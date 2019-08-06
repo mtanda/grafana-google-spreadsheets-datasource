@@ -15,8 +15,14 @@
       </input>
     </div>
 
+    <div class="gf-form">
+      <label class=" gf-form-label width-8">Result format</label>
+      <select class="gf-form-input gf-size-auto" ng-model="ctrl.target.resultFormat"
+        ng-options="f.value as f.text for f in ctrl.resultFormats" ng-change="ctrl.onChangeInternal()"></select>
+    </div>
+
     <div class="gf-form max-width-30">
-      <label class="gf-form-label width-7">Alias format</label>
+      <label class="gf-form-label width-8">Alias format</label>
       <input type="text" class="gf-form-input" ng-model="ctrl.target.aliasFormat" spellcheck='false'
         placeholder="alias format" data-min-length=0 data-items=1000 ng-model-onblur
         ng-change="ctrl.onChangeInternal()">

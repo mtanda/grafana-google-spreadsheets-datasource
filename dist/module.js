@@ -1,4 +1,4 @@
-define(["app/plugins/sdk","lodash","moment"], function(__WEBPACK_EXTERNAL_MODULE_grafana_app_plugins_sdk__, __WEBPACK_EXTERNAL_MODULE_lodash__, __WEBPACK_EXTERNAL_MODULE_moment__) { return /******/ (function(modules) { // webpackBootstrap
+define(["app/core/table_model","app/plugins/sdk","lodash","moment"], function(__WEBPACK_EXTERNAL_MODULE_grafana_app_core_table_model__, __WEBPACK_EXTERNAL_MODULE_grafana_app_plugins_sdk__, __WEBPACK_EXTERNAL_MODULE_lodash__, __WEBPACK_EXTERNAL_MODULE_moment__) { return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -276,6 +276,10 @@ var _lodash2 = _interopRequireDefault(_lodash);
 var _moment = __webpack_require__(/*! moment */ "moment");
 
 var _moment2 = _interopRequireDefault(_moment);
+
+var _table_model = __webpack_require__(/*! grafana/app/core/table_model */ "grafana/app/core/table_model");
+
+var _table_model2 = _interopRequireDefault(_table_model);
 
 var _scriptjs = __webpack_require__(/*! scriptjs */ "../node_modules/scriptjs/dist/script.js");
 
@@ -595,14 +599,28 @@ function () {
           case 2:
             results = _a.sent();
             data = results.map(function (result, i) {
-              return {
-                target: _this.renderTemplate(options.targets[i].aliasFormat, {
-                  range: result.range
-                }),
-                datapoints: result.values.map(function (v) {
-                  return [parseFloat(v[0]), parseFloat(v[1])];
-                })
-              };
+              switch (options.targets[i].resultFormat) {
+                case 'table':
+                  var table = new _table_model2.default();
+                  table.columns = result.values[0].map(function (v, i) {
+                    return {
+                      text: "c" + i,
+                      type: 'string'
+                    };
+                  });
+                  table.rows = result.values;
+                  return table;
+
+                default:
+                  return {
+                    target: _this.renderTemplate(options.targets[i].aliasFormat, {
+                      range: result.range
+                    }),
+                    datapoints: result.values.map(function (v) {
+                      return [parseFloat(v[0]), parseFloat(v[1])];
+                    })
+                  };
+              }
             });
             return [2
             /*return*/
@@ -820,6 +838,13 @@ function (_super) {
     var _this = _super.call(this, $scope, $injector) || this;
 
     _this.scope = $scope;
+    _this.resultFormats = [{
+      text: 'Time series',
+      value: 'time_series'
+    }, {
+      text: 'Table',
+      value: 'table'
+    }];
     return _this;
   }
 
@@ -832,6 +857,17 @@ function (_super) {
 }(_sdk.QueryCtrl);
 
 exports.GoogleSpreadsheetsQueryCtrl = GoogleSpreadsheetsQueryCtrl;
+
+/***/ }),
+
+/***/ "grafana/app/core/table_model":
+/*!***************************************!*\
+  !*** external "app/core/table_model" ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_grafana_app_core_table_model__;
 
 /***/ }),
 
