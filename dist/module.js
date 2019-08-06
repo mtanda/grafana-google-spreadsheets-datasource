@@ -593,7 +593,7 @@ function () {
             , Promise.all(options.targets.filter(function (t) {
               return !t.hide;
             }).map(function (t) {
-              return _this.getValues(t.spreadsheetId, t.range);
+              return _this.getValues(t.spreadsheetId, t.range, t.transpose);
             }))];
 
           case 2:
@@ -752,7 +752,11 @@ function () {
     });
   };
 
-  GoogleSpreadsheetsDatasource.prototype.getValues = function (spreadsheetId, range) {
+  GoogleSpreadsheetsDatasource.prototype.getValues = function (spreadsheetId, range, transpose) {
+    if (transpose === void 0) {
+      transpose = false;
+    }
+
     return __awaiter(this, void 0, void 0, function () {
       var response;
       return __generator(this, function (_a) {
@@ -767,6 +771,11 @@ function () {
 
           case 1:
             response = _a.sent();
+
+            if (transpose) {
+              response.result.values = _lodash2.default.unzip(response.result.values);
+            }
+
             return [2
             /*return*/
             , response.result];
