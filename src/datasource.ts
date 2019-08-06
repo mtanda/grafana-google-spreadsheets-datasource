@@ -120,6 +120,20 @@ export class GoogleSpreadsheetsDatasource {
     };
   }
 
+  async metricFindQuery(query) {
+    let cellValuesQuery = query.match(/^cell_values\(([^,]+?),\s?([^,]+?)\)/);
+    if (cellValuesQuery) {
+      const result = await this.getValues(cellValuesQuery[1], cellValuesQuery[2]);
+      return _.uniq(result.values.flat()).map((v) => {
+        return {
+          text: v
+        };
+      })
+    }
+
+    return this.q.when([]);
+  }
+
   async annotationQuery(options) {
     await this.initialize();
 
