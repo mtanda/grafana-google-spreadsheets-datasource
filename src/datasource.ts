@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import moment from 'moment';
-//import TableModel from 'grafana/app/core/table_model';
+import TableModel from 'grafana/app/core/table_model';
 import scriptjs from 'scriptjs';
 
 export class GoogleSpreadsheetsDatasource {
@@ -94,15 +94,25 @@ export class GoogleSpreadsheetsDatasource {
         })
     );
     const data = results.map((result, i) => {
-      return {
-        target: this.renderTemplate(options.targets[i].aliasFormat, { range: result.range }),
-        datapoints: result.values.map((v) => {
-          return [
-            parseFloat(v[0]),
-            parseFloat(v[1])
-          ];
-        })
-      };
+      switch (options.targets[i].resultFormat) {
+        case 'table':
+          let table = new TableModel();
+          table.columns = result.values[0].map((v, i) => {
+            return { text: `r{i}`, type: 'string' };
+          });
+          table.rows = result.values;
+          return table;
+        default:
+          return {
+            target: this.renderTemplate(options.targets[i].aliasFormat, { range: result.range }),
+            datapoints: result.values.map((v) => {
+              return [
+                parseFloat(v[0]),
+                parseFloat(v[1])
+              ];
+            })
+          };
+      }
     });
 
     return {
