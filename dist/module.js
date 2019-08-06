@@ -791,6 +791,9 @@ function () {
 
           case 1:
             response = _a.sent();
+            response.result.values = response.result.values.filter(function (v) {
+              return v.length > 0;
+            });
 
             if (transpose) {
               response.result.values = _lodash2.default.unzip(response.result.values);
