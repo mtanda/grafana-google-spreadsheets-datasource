@@ -632,9 +632,42 @@ function () {
     });
   };
 
+  GoogleSpreadsheetsDatasource.prototype.metricFindQuery = function (query) {
+    return __awaiter(this, void 0, void 0, function () {
+      var cellValuesQuery, result;
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            cellValuesQuery = query.match(/^cell_values\(([^,]+?),\s?([^,]+?)\)/);
+            if (!cellValuesQuery) return [3
+            /*break*/
+            , 2];
+            return [4
+            /*yield*/
+            , this.getValues(cellValuesQuery[1], cellValuesQuery[2])];
+
+          case 1:
+            result = _a.sent();
+            return [2
+            /*return*/
+            , _lodash2.default.uniq(result.values.flat()).map(function (v) {
+              return {
+                text: v
+              };
+            })];
+
+          case 2:
+            return [2
+            /*return*/
+            , this.q.when([])];
+        }
+      });
+    });
+  };
+
   GoogleSpreadsheetsDatasource.prototype.annotationQuery = function (options) {
     return __awaiter(this, void 0, void 0, function () {
-      var annotation, spreadsheetId, range, timeKeys, timeFormat, titleFormat, textFormat, tagKeys, result, eventList;
+      var annotation, spreadsheetId, range, timeKeys, timeFormat, titleFormat, textFormat, tagKeys, filter, result, eventList;
 
       var _this = this;
 
@@ -656,6 +689,7 @@ function () {
             titleFormat = annotation.titleFormat || '{{2}}';
             textFormat = annotation.textFormat || '{{3}}';
             tagKeys = (annotation.tagKeys || '2,3').split(',');
+            filter = annotation.filter || '';
 
             if (!spreadsheetId || !range) {
               return [2
@@ -676,7 +710,13 @@ function () {
               , []];
             }
 
-            eventList = result.values.map(function (value, i) {
+            eventList = result.values.filter(function (value) {
+              if (!filter) {
+                return true;
+              }
+
+              return true;
+            }).map(function (value, i) {
               var tags = value.filter(function (v, k) {
                 return tagKeys.includes(String(k));
               });
