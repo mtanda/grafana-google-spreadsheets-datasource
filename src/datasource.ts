@@ -90,7 +90,7 @@ export class GoogleSpreadsheetsDatasource {
       options.targets
         .filter((t) => !t.hide)
         .map((t) => {
-          return this.getValues(t.spreadsheetId, t.range);
+          return this.getValues(t.spreadsheetId, t.range, t.transpose);
         })
     );
     const data = results.map((result, i) => {
@@ -192,11 +192,14 @@ export class GoogleSpreadsheetsDatasource {
     return eventList;
   }
 
-  async getValues(spreadsheetId: string, range: string) {
+  async getValues(spreadsheetId: string, range: string, transpose: boolean = false) {
     const response = await gapi.client['sheets'].spreadsheets.values.get({
       spreadsheetId: spreadsheetId,
       range: range,
     });
+    if (transpose) {
+      response.result.values = _.unzip(response.result.values);
+    }
     return response.result;
   }
 
