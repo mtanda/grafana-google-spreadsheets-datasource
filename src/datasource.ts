@@ -96,10 +96,22 @@ export class GoogleSpreadsheetsDatasource {
     const data = results.map((result, i) => {
       switch (options.targets[i].resultFormat) {
         case 'table':
+          const timeKeys = (options.targets[i].timeKeys || '').split(',').map((k) => { return parseInt(k, 10); });
+          const timeFormat = options.targets[i].timeFormat;
           let table = new TableModel();
           table.columns = result.values[0].map((v, i) => {
+            if (timeKeys && timeKeys.includes(i)) {
+              return { text: `c${i}`, type: 'time' };
+            }
             return { text: `c${i}`, type: 'string' };
           });
+          if (timeKeys) {
+            result.values.forEach((v) => {
+              timeKeys.forEach((timeKey) => {
+                v[timeKey] = moment(v[timeKey], timeFormat).valueOf();
+              });
+            });
+          }
           table.rows = result.values;
           return table;
         default:
