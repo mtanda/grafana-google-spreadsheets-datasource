@@ -209,6 +209,7 @@ export class GoogleSpreadsheetsDatasource {
       spreadsheetId: spreadsheetId,
       range: range,
     });
+    response.result.values = response.result.values.filter((v) => { return v.length > 0; });
     if (transpose) {
       response.result.values = _.unzip(response.result.values);
     }
