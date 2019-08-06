@@ -145,6 +145,7 @@ export class GoogleSpreadsheetsDatasource {
     const titleFormat = annotation.titleFormat || '{{2}}';
     const textFormat = annotation.textFormat || '{{3}}';
     const tagKeys = (annotation.tagKeys || '2,3').split(',');
+    const filter = (annotation.filter || '');
 
     if (!spreadsheetId || !range) { return []; }
 
@@ -153,7 +154,12 @@ export class GoogleSpreadsheetsDatasource {
       return [];
     }
 
-    const eventList = result.values.map((value, i) => {
+    const eventList = result.values.filter((value) => {
+      if (!filter) {
+        return true;
+      }
+      return true;
+    }).map((value, i) => {
       const tags = value.filter((v, k) => {
         return tagKeys.includes(String(k));
       });
