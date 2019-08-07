@@ -687,7 +687,7 @@ function () {
 
   GoogleSpreadsheetsDatasource.prototype.annotationQuery = function (options) {
     return __awaiter(this, void 0, void 0, function () {
-      var annotation, spreadsheetId, range, timeKeys, timeFormat, titleFormat, textFormat, tagKeys, filter, result, eventList;
+      var annotation, spreadsheetId, range, timeKeys, timeFormat, titleFormat, textFormat, tagKeys, filter, result, filterExpression, filterPart, eventList;
 
       var _this = this;
 
@@ -730,12 +730,27 @@ function () {
               , []];
             }
 
-            eventList = result.values.filter(function (value) {
-              if (!filter) {
-                return true;
-              }
+            filterExpression = [];
 
-              return true;
+            if (filter) {
+              filterPart = filter.split('=');
+              filterExpression = [{
+                key: filterPart[0],
+                op: '=',
+                value: filterPart[1].replace(/^"/, '').replace(/"$/, '')
+              }];
+            }
+
+            eventList = result.values.filter(function (value) {
+              return filterExpression.every(function (e) {
+                switch (e.op) {
+                  case '=':
+                    return value[e.key] === e.value;
+
+                  default:
+                    return true;
+                }
+              });
             }).map(function (value, i) {
               var tags = value.filter(function (v, k) {
                 return tagKeys.includes(String(k));
