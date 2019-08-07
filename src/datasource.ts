@@ -166,11 +166,26 @@ export class GoogleSpreadsheetsDatasource {
       return [];
     }
 
+    let filterExpression: any = [];
+    if (filter) {
+      const filterPart = filter.split('=');
+      filterExpression = [
+        {
+          key: filterPart[0],
+          op: '=',
+          value: filterPart[1].replace(/^"/, '').replace(/"$/, '')
+        }
+      ];
+    }
     const eventList = result.values.filter((value) => {
-      if (!filter) {
-        return true;
-      }
-      return true;
+      return filterExpression.every((e) => {
+        switch (e.op) {
+          case '=':
+            return value[e.key] === e.value;
+          default:
+            return true;
+        }
+      });
     }).map((value, i) => {
       const tags = value.filter((v, k) => {
         return tagKeys.includes(String(k));
