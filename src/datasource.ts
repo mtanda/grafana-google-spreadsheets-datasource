@@ -102,7 +102,7 @@ export class GoogleSpreadsheetsDatasource {
             const timeKeys = (options.targets[i].timeKeys || '').split(',').map(k => {
               return parseInt(k, 10);
             });
-            let table = new TableModel();
+            const table = new TableModel();
             table.columns = result.values[0].map((v, i) => {
               if (timeKeys && timeKeys.includes(i)) {
                 return { text: `c${i}`, type: 'time' };
@@ -130,10 +130,10 @@ export class GoogleSpreadsheetsDatasource {
               return parseInt(k, 10);
             });
 
-            let series = {};
+            const series = {};
             result.values.forEach(v => {
               let uniqueAttributeKey = 'u';
-              let attrs = {};
+              const attrs = {};
               if (v.length > 2) {
                 uniqueAttributeKey = v
                   .filter((v, k) => {
@@ -175,7 +175,7 @@ export class GoogleSpreadsheetsDatasource {
   }
 
   async metricFindQuery(query) {
-    let cellValuesQuery = query.match(/^cell_values\(([^,]+?),\s?([^,]+?)\)/);
+    const cellValuesQuery = query.match(/^cell_values\(([^,]+?),\s?([^,]+?)\)/);
     if (cellValuesQuery) {
       const result = await this.getValues(cellValuesQuery[1], cellValuesQuery[2]);
       return _.uniq(result.values.flat()).map(v => {
@@ -238,7 +238,7 @@ export class GoogleSpreadsheetsDatasource {
         });
         const timeFrom = timeFormat ? moment(value[timeKeys[0]], timeFormat).valueOf() : parseInt(value[timeKeys[0]], 10);
 
-        let event: any = [
+        const event: any = [
           {
             annotation: annotation,
             time: timeFrom,
@@ -282,7 +282,7 @@ export class GoogleSpreadsheetsDatasource {
 
   renderTemplate(aliasPattern: string, aliasData) {
     const aliasRegex = /\{\{\s*(.+?)\s*\}\}/g;
-    return aliasPattern.replace(aliasRegex, function(match, g1) {
+    return aliasPattern.replace(aliasRegex, (match, g1) => {
       if (aliasData[g1]) {
         return aliasData[g1];
       }
