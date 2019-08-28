@@ -32,10 +32,28 @@
     <gf-form-switch class="gf-form" label="Transpose" label-class="width-8" checked="ctrl.target.transpose"
       on-change="ctrl.onChangeInternal()">
     </gf-form-switch>
+
+    <gf-form-switch class="gf-form" label="Use Header" label-class="width-8" checked="ctrl.target.useHeader"
+      on-change="ctrl.onChangeInternal()" ng-if="ctrl.target.resultFormat === 'time_series'">
+    </gf-form-switch>
   </div>
 
-  <div class="gf-form-inline" ng-if="ctrl.target.resultFormat === 'table'">
-    <div class="gf-form">
+  <div class="gf-form-inline">
+    <div class="gf-form" ng-if="ctrl.target.resultFormat === 'time_series'">
+      <label class="gf-form-label width-8">Time Key</label>
+      <input type="text" class="gf-form-input" ng-model="ctrl.target.timeKey" spellcheck='false' data-min-length=0
+        data-items=20 ng-model-onblur ng-change="ctrl.onChangeInternal()">
+      </input>
+    </div>
+
+    <div class="gf-form" ng-if="ctrl.target.resultFormat === 'time_series'">
+      <label class="gf-form-label width-8">Value Keys</label>
+      <input type="text" class="gf-form-input" ng-model="ctrl.target.valueKeys" spellcheck='false' data-min-length=0
+        data-items=20 ng-model-onblur ng-change="ctrl.onChangeInternal()">
+      </input>
+    </div>
+
+    <div class="gf-form" ng-if="ctrl.target.resultFormat === 'table'">
       <label class="gf-form-label width-8">Time Keys</label>
       <input type="text" class="gf-form-input" ng-model="ctrl.target.timeKeys" spellcheck='false' data-min-length=0
         data-items=20 ng-model-onblur ng-change="ctrl.onChangeInternal()">
