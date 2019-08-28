@@ -43,7 +43,7 @@ export class GoogleSpreadsheetsDatasource {
   }
 
   async initialize() {
-    if (this.access == 'proxy') {
+    if (this.access === 'proxy') {
       return Promise.resolve([]); // not supported
     }
     if (this.initialized) {
@@ -223,7 +223,7 @@ export class GoogleSpreadsheetsDatasource {
     return eventList;
   }
 
-  async getValues(spreadsheetId: string, range: string, transpose: boolean = false) {
+  async getValues(spreadsheetId: string, range: string, transpose = false) {
     const response = await gapi.client['sheets'].spreadsheets.values.get({
       spreadsheetId: spreadsheetId,
       range: range,
