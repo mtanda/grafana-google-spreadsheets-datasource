@@ -94,38 +94,80 @@ export class GoogleSpreadsheetsDatasource {
           return this.getValues(t.spreadsheetId, t.range, t.transpose);
         })
     );
-    const data = results.map((result, i) => {
-      switch (options.targets[i].resultFormat) {
-        case 'table':
-          const timeKeys = (options.targets[i].timeKeys || '').split(',').map(k => {
-            return parseInt(k, 10);
-          });
-          const timeFormat = options.targets[i].timeFormat;
-          let table = new TableModel();
-          table.columns = result.values[0].map((v, i) => {
-            if (timeKeys && timeKeys.includes(i)) {
-              return { text: `c${i}`, type: 'time' };
+    const data = results
+      .map((result, i) => {
+        const timeFormat = options.targets[i].timeFormat;
+        switch (options.targets[i].resultFormat) {
+          case 'table':
+            const timeKeys = (options.targets[i].timeKeys || '').split(',').map(k => {
+              return parseInt(k, 10);
+            });
+            let table = new TableModel();
+            table.columns = result.values[0].map((v, i) => {
+              if (timeKeys && timeKeys.includes(i)) {
+                return { text: `c${i}`, type: 'time' };
+              }
+              return { text: `c${i}`, type: 'string' };
+            });
+            if (timeKeys) {
+              result.values.forEach(v => {
+                timeKeys.forEach(timeKey => {
+                  v[timeKey] = moment(v[timeKey], timeFormat).valueOf();
+                });
+              });
             }
-            return { text: `c${i}`, type: 'string' };
-          });
-          if (timeKeys) {
+            table.rows = result.values;
+            return [table];
+          default:
+            let header = {};
+            if (options.targets[i].useHeader) {
+              header = result.values[0];
+              result.values = result.values.slice(1);
+            }
+
+            const timeKey = options.targets[i].timeKey ? parseInt(options.targets[i].timeKey, 10) : 0;
+            const valueKeys = (options.targets[i].valueKeys || '1').split(',').map(k => {
+              return parseInt(k, 10);
+            });
+
+            let series = {};
             result.values.forEach(v => {
-              timeKeys.forEach(timeKey => {
-                v[timeKey] = moment(v[timeKey], timeFormat).valueOf();
+              let uniqueAttributeKey = 'u';
+              let attrs = {};
+              if (v.length > 2) {
+                uniqueAttributeKey = v
+                  .filter((v, k) => {
+                    return k !== timeKey && !valueKeys.includes(k);
+                  })
+                  .map((v, k) => {
+                    attrs[`attribute${k}`] = v;
+                    return v;
+                  })
+                  .join('_');
+              }
+              valueKeys.forEach(valueKey => {
+                const headerValue = header[valueKey] || '';
+                const uniqueKey = `${uniqueAttributeKey}_${headerValue}`;
+                if (!series[uniqueKey]) {
+                  series[uniqueKey] = {
+                    target: this.renderTemplate(
+                      options.targets[i].aliasFormat,
+                      Object.assign({ range: result.range }, { header: headerValue }, attrs)
+                    ),
+                    datapoints: [],
+                  };
+                }
+                series[uniqueKey].datapoints.push([
+                  parseFloat(v[valueKey]),
+                  timeFormat ? moment(v[timeKey], timeFormat).valueOf() : parseFloat(v[timeKey]),
+                ]);
               });
             });
-          }
-          table.rows = result.values;
-          return table;
-        default:
-          return {
-            target: this.renderTemplate(options.targets[i].aliasFormat, { range: result.range }),
-            datapoints: result.values.map(v => {
-              return [parseFloat(v[0]), parseFloat(v[1])];
-            }),
-          };
-      }
-    });
+
+            return Object.values(series);
+        }
+      })
+      .flat();
 
     return {
       data: data,
