@@ -16,6 +16,7 @@ export class GoogleSpreadsheetsDatasource {
   timeSrv: any;
   initialized: boolean;
 
+  /** @ngInject */
   constructor(instanceSettings, $q, templateSrv, timeSrv) {
     this.type = instanceSettings.type;
     this.name = instanceSettings.name;
