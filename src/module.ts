@@ -10,5 +10,5 @@ export {
   GoogleSpreadsheetsDatasource as Datasource,
   GoogleSpreadsheetsConfigCtrl as ConfigCtrl,
   GoogleSpreadsheetsQueryCtrl as QueryCtrl,
-  GoogleSpreadsheetsAnnotationsQueryCtrl as AnnotationsQueryCtrl
+  GoogleSpreadsheetsAnnotationsQueryCtrl as AnnotationsQueryCtrl,
 };

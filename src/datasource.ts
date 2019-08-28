@@ -54,7 +54,7 @@ export class GoogleSpreadsheetsDatasource {
     await gapi.client.init({
       clientId: this.clientId,
       scope: this.scopes,
-      discoveryDocs: this.discoveryDocs
+      discoveryDocs: this.discoveryDocs,
     });
 
     const authInstance = gapi.auth2.getAuthInstance();
@@ -79,7 +79,7 @@ export class GoogleSpreadsheetsDatasource {
       await this.initialize();
       return { status: 'success', message: 'Data source is working', title: 'Success' };
     } catch (err) {
-      return { status: "error", message: err.message, title: "Error" };
+      return { status: 'error', message: err.message, title: 'Error' };
     }
   }
 
@@ -88,15 +88,17 @@ export class GoogleSpreadsheetsDatasource {
 
     const results: any = await Promise.all(
       options.targets
-        .filter((t) => !t.hide)
-        .map((t) => {
+        .filter(t => !t.hide)
+        .map(t => {
           return this.getValues(t.spreadsheetId, t.range, t.transpose);
         })
     );
     const data = results.map((result, i) => {
       switch (options.targets[i].resultFormat) {
         case 'table':
-          const timeKeys = (options.targets[i].timeKeys || '').split(',').map((k) => { return parseInt(k, 10); });
+          const timeKeys = (options.targets[i].timeKeys || '').split(',').map(k => {
+            return parseInt(k, 10);
+          });
           const timeFormat = options.targets[i].timeFormat;
           let table = new TableModel();
           table.columns = result.values[0].map((v, i) => {
@@ -106,8 +108,8 @@ export class GoogleSpreadsheetsDatasource {
             return { text: `c${i}`, type: 'string' };
           });
           if (timeKeys) {
-            result.values.forEach((v) => {
-              timeKeys.forEach((timeKey) => {
+            result.values.forEach(v => {
+              timeKeys.forEach(timeKey => {
                 v[timeKey] = moment(v[timeKey], timeFormat).valueOf();
               });
             });
@@ -117,18 +119,15 @@ export class GoogleSpreadsheetsDatasource {
         default:
           return {
             target: this.renderTemplate(options.targets[i].aliasFormat, { range: result.range }),
-            datapoints: result.values.map((v) => {
-              return [
-                parseFloat(v[0]),
-                parseFloat(v[1])
-              ];
-            })
+            datapoints: result.values.map(v => {
+              return [parseFloat(v[0]), parseFloat(v[1])];
+            }),
           };
       }
     });
 
     return {
-      data: data
+      data: data,
     };
   }
 
@@ -136,11 +135,11 @@ export class GoogleSpreadsheetsDatasource {
     let cellValuesQuery = query.match(/^cell_values\(([^,]+?),\s?([^,]+?)\)/);
     if (cellValuesQuery) {
       const result = await this.getValues(cellValuesQuery[1], cellValuesQuery[2]);
-      return _.uniq(result.values.flat()).map((v) => {
+      return _.uniq(result.values.flat()).map(v => {
         return {
-          text: v
+          text: v,
         };
-      })
+      });
     }
 
     return this.q.when([]);
@@ -153,13 +152,15 @@ export class GoogleSpreadsheetsDatasource {
     const spreadsheetId = annotation.spreadsheetId || '';
     const range = annotation.range || '';
     const timeKeys = (annotation.timeKeys || '0,1').split(',');
-    const timeFormat = (annotation.timeFormat || '');
+    const timeFormat = annotation.timeFormat || '';
     const titleFormat = annotation.titleFormat || '{{2}}';
     const textFormat = annotation.textFormat || '{{3}}';
     const tagKeys = (annotation.tagKeys || '2,3').split(',');
-    const filter = (annotation.filter || '');
+    const filter = annotation.filter || '';
 
-    if (!spreadsheetId || !range) { return []; }
+    if (!spreadsheetId || !range) {
+      return [];
+    }
 
     const result = await this.getValues(spreadsheetId, range);
     if (_.isEmpty(result)) {
@@ -173,48 +174,51 @@ export class GoogleSpreadsheetsDatasource {
         {
           key: filterPart[0],
           op: '=',
-          value: filterPart[1].replace(/^"/, '').replace(/"$/, '')
-        }
-      ];
-    }
-    const eventList = result.values.filter((value) => {
-      return filterExpression.every((e) => {
-        switch (e.op) {
-          case '=':
-            return value[e.key] === e.value;
-          default:
-            return true;
-        }
-      });
-    }).map((value, i) => {
-      const tags = value.filter((v, k) => {
-        return tagKeys.includes(String(k));
-      });
-      const timeFrom = timeFormat ? moment(value[timeKeys[0]], timeFormat).valueOf() : parseInt(value[timeKeys[0]], 10);
-
-      let event: any = [
-        {
-          annotation: annotation,
-          time: timeFrom,
-          title: this.renderTemplate(titleFormat, value),
-          text: this.renderTemplate(textFormat, value),
-          tags: tags,
+          value: filterPart[1].replace(/^"/, '').replace(/"$/, ''),
         },
       ];
-      if (timeKeys.length === 2) {
-        const timeTo = timeFormat ? moment(value[timeKeys[1]], timeFormat).valueOf() : parseInt(value[timeKeys[1]], 10);
-        event[0].regionId = spreadsheetId + i;
-        event.push({
-          regionId: spreadsheetId + i,
-          annotation: annotation,
-          time: timeTo,
-          title: this.renderTemplate(titleFormat, value),
-          text: this.renderTemplate(textFormat, value),
-          tags: tags,
+    }
+    const eventList = result.values
+      .filter(value => {
+        return filterExpression.every(e => {
+          switch (e.op) {
+            case '=':
+              return value[e.key] === e.value;
+            default:
+              return true;
+          }
         });
-      }
-      return event;
-    }).flat();
+      })
+      .map((value, i) => {
+        const tags = value.filter((v, k) => {
+          return tagKeys.includes(String(k));
+        });
+        const timeFrom = timeFormat ? moment(value[timeKeys[0]], timeFormat).valueOf() : parseInt(value[timeKeys[0]], 10);
+
+        let event: any = [
+          {
+            annotation: annotation,
+            time: timeFrom,
+            title: this.renderTemplate(titleFormat, value),
+            text: this.renderTemplate(textFormat, value),
+            tags: tags,
+          },
+        ];
+        if (timeKeys.length === 2) {
+          const timeTo = timeFormat ? moment(value[timeKeys[1]], timeFormat).valueOf() : parseInt(value[timeKeys[1]], 10);
+          event[0].regionId = spreadsheetId + i;
+          event.push({
+            regionId: spreadsheetId + i,
+            annotation: annotation,
+            time: timeTo,
+            title: this.renderTemplate(titleFormat, value),
+            text: this.renderTemplate(textFormat, value),
+            tags: tags,
+          });
+        }
+        return event;
+      })
+      .flat();
 
     return eventList;
   }
@@ -224,7 +228,9 @@ export class GoogleSpreadsheetsDatasource {
       spreadsheetId: spreadsheetId,
       range: range,
     });
-    response.result.values = response.result.values.filter((v) => { return v.length > 0; });
+    response.result.values = response.result.values.filter(v => {
+      return v.length > 0;
+    });
     if (transpose) {
       response.result.values = _.unzip(response.result.values);
     }
@@ -233,7 +239,7 @@ export class GoogleSpreadsheetsDatasource {
 
   renderTemplate(aliasPattern: string, aliasData) {
     const aliasRegex = /\{\{\s*(.+?)\s*\}\}/g;
-    return aliasPattern.replace(aliasRegex, function (match, g1) {
+    return aliasPattern.replace(aliasRegex, function(match, g1) {
       if (aliasData[g1]) {
         return aliasData[g1];
       }

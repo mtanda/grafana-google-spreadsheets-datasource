@@ -16,4 +16,3 @@ export class GoogleSpreadsheetsQueryCtrl extends QueryCtrl {
     this.panelCtrl.refresh();
   }
 }
-
