@@ -3,7 +3,7 @@ import { GoogleSpreadsheetsQueryCtrl } from './query_ctrl';
 import { GoogleSpreadsheetsAnnotationsQueryCtrl } from './annotations_query_ctrl';
 
 class GoogleSpreadsheetsConfigCtrl {
-  static templateUrl = 'partials/config.html';
+  static templateUrl = 'config.html';
 }
 
 export {

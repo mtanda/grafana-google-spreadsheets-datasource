@@ -4,7 +4,7 @@ export class GoogleSpreadsheetsQueryCtrl extends QueryCtrl {
   scope: any;
   panelCtrl: any;
   resultFormats: any[];
-  static templateUrl = 'partials/query.editor.html';
+  static templateUrl = 'query.editor.html';
 
   /** @ngInject */
   constructor($scope, $injector) {
