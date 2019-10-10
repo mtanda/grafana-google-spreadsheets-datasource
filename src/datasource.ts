@@ -89,7 +89,7 @@ export class GoogleSpreadsheetsDatasource {
 
     const results: any = await Promise.all(
       options.targets
-        .filter(t => !t.hide)
+        .filter(t => !t.hide && t.spreadsheetId)
         .map(t => {
           return this.getValues(t.spreadsheetId, t.range, t.transpose);
         })
