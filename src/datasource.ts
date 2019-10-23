@@ -91,7 +91,11 @@ export class GoogleSpreadsheetsDatasource {
       options.targets
         .filter(t => !t.hide && t.spreadsheetId)
         .map(t => {
-          return this.getValues(t.spreadsheetId, t.range, t.transpose);
+          return this.getValues(
+            this.templateSrv.replace(t.spreadsheetId, options.scopedVars),
+            this.templateSrv.replace(t.range, options.scopedVars),
+            t.transpose
+          );
         })
     );
     const data = results
@@ -177,7 +181,9 @@ export class GoogleSpreadsheetsDatasource {
   async metricFindQuery(query) {
     const cellValuesQuery = query.match(/^cell_values\(([^,]+?),\s?([^,]+?)\)/);
     if (cellValuesQuery) {
-      const result = await this.getValues(cellValuesQuery[1], cellValuesQuery[2]);
+      const spreadsheetId = this.templateSrv.replace(cellValuesQuery[1]);
+      const range = this.templateSrv.replace(cellValuesQuery[2]);
+      const result = await this.getValues(spreadsheetId, range);
       return _.uniq(result.values.flat()).map(v => {
         return {
           text: v,
@@ -192,14 +198,14 @@ export class GoogleSpreadsheetsDatasource {
     await this.initialize();
 
     const annotation = options.annotation;
-    const spreadsheetId = annotation.spreadsheetId || '';
-    const range = annotation.range || '';
-    const timeKeys = (annotation.timeKeys || '0,1').split(',');
-    const timeFormat = annotation.timeFormat || '';
-    const titleFormat = annotation.titleFormat || '{{2}}';
-    const textFormat = annotation.textFormat || '{{3}}';
-    const tagKeys = (annotation.tagKeys || '2,3').split(',');
-    const filter = annotation.filter || '';
+    const spreadsheetId = this.templateSrv.replace(annotation.spreadsheetId || '');
+    const range = this.templateSrv.replace(annotation.range || '');
+    const timeKeys = this.templateSrv.replace(annotation.timeKeys || '0,1').split(',');
+    const timeFormat = this.templateSrv.replace(annotation.timeFormat || '');
+    const titleFormat = this.templateSrv.replace(annotation.titleFormat || '{{2}}');
+    const textFormat = this.templateSrv.replace(annotation.textFormat || '{{3}}');
+    const tagKeys = this.templateSrv.replace(annotation.tagKeys || '2,3').split(',');
+    const filter = this.templateSrv.replace(annotation.filter || '');
 
     if (!spreadsheetId || !range) {
       return [];
