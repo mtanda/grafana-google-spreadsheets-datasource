@@ -2,11 +2,13 @@ import _ from 'lodash';
 import moment from 'moment';
 import TableModel from 'grafana/app/core/table_model';
 import scriptjs from 'scriptjs';
+import { DataSourceApi, DataSourceInstanceSettings, DataQueryRequest } from '@grafana/ui';
+import { GoogleSpreadsheetsQuery, GoogleSpreadsheetsOptions } from './types';
 
-export class GoogleSpreadsheetsDatasource {
+export default class GoogleSpreadsheetsDatasource extends DataSourceApi<GoogleSpreadsheetsQuery, GoogleSpreadsheetsOptions> {
   type: string;
   name: string;
-  id: string;
+  id: number;
   access: string;
   clientId: string;
   scopes: any;
@@ -17,7 +19,8 @@ export class GoogleSpreadsheetsDatasource {
   initialized: boolean;
 
   /** @ngInject */
-  constructor(instanceSettings, $q, templateSrv, timeSrv) {
+  constructor(instanceSettings: DataSourceInstanceSettings<GoogleSpreadsheetsOptions>, $q, templateSrv, timeSrv) {
+    super(instanceSettings);
     this.type = instanceSettings.type;
     this.name = instanceSettings.name;
     this.id = instanceSettings.id;
@@ -84,7 +87,7 @@ export class GoogleSpreadsheetsDatasource {
     }
   }
 
-  async query(options) {
+  async query(options: DataQueryRequest<GoogleSpreadsheetsQuery>) {
     await this.initialize();
 
     const results: any = await Promise.all(

@@ -1,14 +1,16 @@
-import { GoogleSpreadsheetsDatasource } from './datasource';
+import GoogleSpreadsheetsDatasource from './datasource';
 import { GoogleSpreadsheetsQueryCtrl } from './query_ctrl';
 import { GoogleSpreadsheetsAnnotationsQueryCtrl } from './annotations_query_ctrl';
+import { DataSourcePlugin } from '@grafana/ui';
+import { GoogleSpreadsheetsQuery, GoogleSpreadsheetsOptions } from './types';
 
 class GoogleSpreadsheetsConfigCtrl {
   static templateUrl = 'config.html';
 }
 
-export {
-  GoogleSpreadsheetsDatasource as Datasource,
-  GoogleSpreadsheetsConfigCtrl as ConfigCtrl,
-  GoogleSpreadsheetsQueryCtrl as QueryCtrl,
-  GoogleSpreadsheetsAnnotationsQueryCtrl as AnnotationsQueryCtrl,
-};
+export const plugin = new DataSourcePlugin<GoogleSpreadsheetsDatasource, GoogleSpreadsheetsQuery, GoogleSpreadsheetsOptions>(
+  GoogleSpreadsheetsDatasource
+)
+  .setConfigCtrl(GoogleSpreadsheetsConfigCtrl)
+  .setQueryCtrl(GoogleSpreadsheetsQueryCtrl)
+  .setAnnotationQueryCtrl(GoogleSpreadsheetsAnnotationsQueryCtrl);
