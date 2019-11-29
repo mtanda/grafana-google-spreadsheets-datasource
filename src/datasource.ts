@@ -182,6 +182,8 @@ export default class GoogleSpreadsheetsDatasource extends DataSourceApi<GoogleSp
   }
 
   async metricFindQuery(query) {
+    await this.initialize();
+    
     const cellValuesQuery = query.match(/^cell_values\(([^,]+?),\s?([^,]+?)\)/);
     if (cellValuesQuery) {
       const spreadsheetId = this.templateSrv.replace(cellValuesQuery[1]);
