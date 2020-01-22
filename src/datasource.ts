@@ -2,7 +2,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import TableModel from 'grafana/app/core/table_model';
 import scriptjs from 'scriptjs';
-import { DataSourceApi, DataSourceInstanceSettings, DataQueryRequest } from '@grafana/ui';
+import { DataSourceApi, DataSourceInstanceSettings, DataQueryRequest } from '@grafana/data';
 import { GoogleSpreadsheetsQuery, GoogleSpreadsheetsOptions } from './types';
 
 export default class GoogleSpreadsheetsDatasource extends DataSourceApi<GoogleSpreadsheetsQuery, GoogleSpreadsheetsOptions> {

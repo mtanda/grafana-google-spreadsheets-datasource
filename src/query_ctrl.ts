@@ -10,7 +10,10 @@ export class GoogleSpreadsheetsQueryCtrl extends QueryCtrl {
   constructor($scope, $injector) {
     super($scope, $injector);
     this.scope = $scope;
-    this.resultFormats = [{ text: 'Time series', value: 'time_series' }, { text: 'Table', value: 'table' }];
+    this.resultFormats = [
+      { text: 'Time series', value: 'time_series' },
+      { text: 'Table', value: 'table' },
+    ];
   }
 
   onChangeInternal() {
